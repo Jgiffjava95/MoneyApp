@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class prompt {
 
-	private mockDB db = new mockDB();
+	private accountDB db = new accountDB();
 	private Scanner listener = new Scanner(System.in);
 
 	public void start() {
@@ -51,13 +51,13 @@ public class prompt {
 		String userName = createUserName();
 		String password = createPassword();
 
-		db.createAccount(userName, password);
+		db.post(userName, password);
 	}
 
 	private String createUserName() {
 		while (true) {
 			System.out.println("Create Username.");
-			String userName = listener.nextLine();
+			String userName = stringListener();
 			if (validateUserNameCreate(userName) == true) {
 				return userName;
 			}
@@ -68,10 +68,10 @@ public class prompt {
 	private String createPassword() {
 		while (true) {
 			System.out.println("Create Password.");
-			String password = listener.nextLine();
+			String password = stringListener();
 
 			System.out.println("Enter Password Again.");
-			String passwordCheck = listener.nextLine();
+			String passwordCheck = stringListener();
 
 			if (validatePasswordCreate(password, passwordCheck) == true) {
 				return password;
@@ -86,7 +86,16 @@ public class prompt {
 	}
 
 	private boolean validateUserNameCreate(String userName) {
+
+		ArrayList<Account> accounts = db.get();
+
 		if (userName.length() <= 20 && userName.length() >= 3) {
+			for (Account i : accounts) {
+				if (i.getUserName().equals(userName)) {
+					System.out.println(userName + " is already taken.");
+					return false;
+				}
+			}
 			return true;
 		}
 		System.out.println("Username must be longer than 3 but no longer than 20 characters.");
@@ -107,7 +116,7 @@ public class prompt {
 	}
 
 	private void loginUser() {
-		ArrayList<Account> allAccounts = new ArrayList<Account>(db.getAccounts());
+		ArrayList<Account> allAccounts = new ArrayList<Account>(db.get());
 
 		while (true) {
 
@@ -118,9 +127,9 @@ public class prompt {
 			String password = listener.nextLine();
 
 			for (Account i : allAccounts) {
-				if (userName.equals(i.userName)) {
-					if (password.equals(i.password)) {
-						System.out.println("Login Successful, Welcome " + i.userName + "!");
+				if (userName.equals(i.getUserName())) {
+					if (password.equals(i.getPassword())) {
+						System.out.println("Login Successful, Welcome " + i.getUserName() + "!");
 						userMenu(i);
 					}
 				}
@@ -136,21 +145,22 @@ public class prompt {
 			System.out.println("Please SELECT an OPTION by entering a coresponding NUMBER.");
 			System.out.println("1. Check Balance");
 			System.out.println("2. Send Money");
-			System.out.println("3. Send History");
-			System.out.println("4. Recieve History");
+			System.out.println("3. Transaction History");
+			System.out.println("4. Known Accounts");
 			System.out.println("5. Log Out");
 
 			switch (intListener()) {
 
 			case 1:
-				System.out.println("Account Balance: $" + i.accountBalance);
+				System.out.println("Account Balance: $" + i.getAccountBalance());
 				continue;
 			case 2:
-				break;
+				createTransactionWithUser();
+				continue;
 			case 3:
-				break;
+				continue;
 			case 4:
-				break;
+				continue;
 			case 5:
 				start();
 			default:
@@ -158,6 +168,42 @@ public class prompt {
 				continue;
 			}
 		}
+
+	}
+
+	private void createTransactionWithUser() {
+		while (true) {
+			System.out.println("Please SELECT an OPTION by entering a coresponding NUMBER.");
+			System.out.println("Who would you like to send to?");
+			System.out.println("1. Enter Username Manually");
+			System.out.println("2. Known Accounts");
+			System.out.println("0. Go Back");
+
+			switch (intListener()) {
+
+			case 1:
+				searchUsername();
+				break;
+			case 2:
+				selectViaKnownAccounts();
+				break;
+			default:
+				System.out.println("Please Enter a valid option.");
+				continue;
+			case 0:
+				return;
+			}
+		}
+
+	}
+
+	private void selectViaKnownAccounts() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void searchUsername() {
+		// TODO Auto-generated method stub
 
 	}
 

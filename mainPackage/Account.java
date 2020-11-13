@@ -1,27 +1,23 @@
 package mainPackage;
 
-import mainPackage.MoneyAppEnums.accountTypes;
+import java.util.ArrayList;
 
 class Account {
 	
-	public Account(int accountId, String userName, String password, double accountBalance, accountTypes accountType) {
+		private int accountId;
+		private String userName;
+		private String password;
+		private double accountBalance;
+		private ArrayList<Transaction> transactions;
+		private ArrayList<String> knownAccounts;
+		
+	public Account(int accountId, String userName, String password, double accountBalance) {
 		this.accountId = accountId;
 		this.userName = userName;
 		this.password = password;
 		this.accountBalance = accountBalance;
-		this.accountType = accountType;
 	}
 	
-	//Variables
-	
-	protected int accountId;
-	protected String userName;
-	protected String password;
-	protected double accountBalance;
-	protected accountTypes accountType;
-	
-	//Getters & Setters
-
 	public String getUserName() {
 		return userName;
 	}
@@ -44,31 +40,25 @@ class Account {
 	public void setAccountBalance(double accountBalance) {
 		this.accountBalance = accountBalance;
 	}
-	
-	public accountTypes getAccountType() {
-		return accountType;
+
+	public ArrayList<Transaction> getTransactions() {
+		return this.transactions;
 	}
 
-	public void setAccountTypeBronze(accountTypes accountType) {
-		this.accountType = accountType.Bronze;
+	public void setTransactions(Transaction transactions) {
+		this.transactions.add(transactions);
+	}
+
+	public ArrayList<String> getKnownAccounts() {
+		return this.knownAccounts;
+	}
+
+	public void setKnownAccounts(String knownAccounts) {
+		this.knownAccounts.add(knownAccounts);
 	}
 	
-	public void setAccountTypeSilver(accountTypes accountType) {
-		this.accountType = accountType.Silver;
-	}
 	
-	public void setAccountTypeGold(accountTypes accountType) {
-		this.accountType = accountType.Gold;
-	}
 	
-	//Methods
 	
-	public void displayAccountData() {
-		System.out.println("User Name: " + userName + "\n" +
-						   "Password: " + password + "\n" +
-						   "Account Balance: " + accountBalance + "\n" +
-						   "Wallet Balance: " + "\n" +
-						   "User Type: " + accountType);
-	}
 
 }
