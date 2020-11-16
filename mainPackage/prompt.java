@@ -87,10 +87,10 @@ public class prompt {
 
 	private boolean validateUserNameCreate(String userName) {
 
-		ArrayList<Account> accounts = db.get();
+		ArrayList<Account> Accounts = new ArrayList<Account>(db.get());
 
 		if (userName.length() <= 20 && userName.length() >= 3) {
-			for (Account i : accounts) {
+			for (Account i : Accounts) {
 				if (i.getUserName().equals(userName)) {
 					System.out.println(userName + " is already taken.");
 					return false;
@@ -116,9 +116,10 @@ public class prompt {
 	}
 
 	private void loginUser() {
-		ArrayList<Account> allAccounts = new ArrayList<Account>(db.get());
 
 		while (true) {
+
+			ArrayList<Account> Accounts = new ArrayList<Account>(db.get());
 
 			System.out.println("***Login***");
 			System.out.println("Enter Username.");
@@ -126,7 +127,7 @@ public class prompt {
 			System.out.println("Enter Password.");
 			String password = listener.nextLine();
 
-			for (Account i : allAccounts) {
+			for (Account i : Accounts) {
 				if (userName.equals(i.getUserName())) {
 					if (password.equals(i.getPassword())) {
 						System.out.println("Login Successful, Welcome " + i.getUserName() + "!");
@@ -139,7 +140,7 @@ public class prompt {
 		}
 	}
 
-	private void userMenu(Account i) {
+	private void userMenu(Account user) {
 		while (true) {
 
 			System.out.println("Please SELECT an OPTION by entering a coresponding NUMBER.");
@@ -152,10 +153,10 @@ public class prompt {
 			switch (intListener()) {
 
 			case 1:
-				System.out.println("Account Balance: $" + i.getAccountBalance());
+				System.out.println("Account Balance: $" + user.getAccountBalance());
 				continue;
 			case 2:
-				createTransactionWithUser();
+				createTransactionWithUser(user);
 				continue;
 			case 3:
 				continue;
@@ -171,7 +172,7 @@ public class prompt {
 
 	}
 
-	private void createTransactionWithUser() {
+	private void createTransactionWithUser(Account user) {
 		while (true) {
 			System.out.println("Please SELECT an OPTION by entering a coresponding NUMBER.");
 			System.out.println("Who would you like to send to?");
@@ -182,10 +183,10 @@ public class prompt {
 			switch (intListener()) {
 
 			case 1:
-				searchUsername();
+				searchUsername(user);
 				break;
 			case 2:
-				selectViaKnownAccounts();
+				selectViaKnownAccounts(user);
 				break;
 			default:
 				System.out.println("Please Enter a valid option.");
@@ -197,14 +198,48 @@ public class prompt {
 
 	}
 
-	private void selectViaKnownAccounts() {
+	private void selectViaKnownAccounts(Account i) {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void searchUsername() {
-		// TODO Auto-generated method stub
+	private void searchUsername(Account user) {
 
+		ArrayList<Account> Accounts = new ArrayList<Account>(db.get());
+
+		while (true) {
+			System.out.print("Enter the Username you want to send to.");
+			String userName = stringListener();
+			for (Account i : Accounts) {
+				if (userName.equals(i.getUserName())) {
+					sendAmount(user, i);
+				}
+			}
+			System.out.println("Unkown user: " + userName);
+			break;
+		}
+	}
+
+	private void sendAmount(Account user, Account reciever) {
+		while (true) {
+			System.out.print("How much would you like to send?");
+			double transferAmount = intListener();
+			if (validateTransferAmount(transferAmount, user) == true) {
+				user.setAccountBalance(user.getAccountBalance() - transferAmount);
+				reciever.setAccountBalance(reciever.getAccountBalance() + transferAmount);
+				System.out.println(transferAmount + " has been sent to " + reciever.getUserName() + ".");
+
+				userMenu(user);
+			}
+			System.out.println("You do not have enough money to send that amount.");
+		}
+	}
+
+	private boolean validateTransferAmount(double transferAmount, Account user) {
+		if(transferAmount > user.getAccountBalance()) {
+			return false;
+		}
+		return true;
 	}
 
 }
