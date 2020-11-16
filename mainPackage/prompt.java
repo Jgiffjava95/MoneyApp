@@ -159,8 +159,10 @@ public class prompt {
 				createTransactionWithUser(user);
 				continue;
 			case 3:
+				transactionHistoryDisplay(user);
 				continue;
 			case 4:
+				knownAccountsDisplay(user);
 				continue;
 			case 5:
 				start();
@@ -170,6 +172,21 @@ public class prompt {
 			}
 		}
 
+	}
+
+	private void knownAccountsDisplay(Account user) {
+		for (String i : user.getKnownAccounts()) {
+			System.out.println("Username: " + i);
+		}
+		return;
+		
+	}
+
+	private void transactionHistoryDisplay(Account user) {
+		for (Transaction i : user.getTransactions()) {
+			System.out.println("Sender: " + i.getSender() + " Reciever: " + i.getReciever() + " Ammount: $" + i.getAmmountTransfered());
+		}
+		return;
 	}
 
 	private void createTransactionWithUser(Account user) {
@@ -225,8 +242,18 @@ public class prompt {
 			System.out.print("How much would you like to send?");
 			double transferAmount = intListener();
 			if (validateTransferAmount(transferAmount, user) == true) {
+				
 				user.setAccountBalance(user.getAccountBalance() - transferAmount);
 				reciever.setAccountBalance(reciever.getAccountBalance() + transferAmount);
+				
+				Transaction currentTransaction = new Transaction(user.getUserName(), reciever.getUserName(), transferAmount);
+				
+				user.setTransactions(currentTransaction);
+				reciever.setTransactions(currentTransaction);
+				
+				user.setKnownAccounts(reciever.getUserName());
+				reciever.setKnownAccounts(user.getUserName());
+				
 				System.out.println(transferAmount + " has been sent to " + reciever.getUserName() + ".");
 
 				userMenu(user);

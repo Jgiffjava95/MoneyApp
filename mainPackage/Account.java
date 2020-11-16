@@ -8,8 +8,8 @@ class Account {
 		private String userName;
 		private String password;
 		private double accountBalance;
-		private ArrayList<Transaction> transactions;
-		private ArrayList<String> knownAccounts;
+		private ArrayList<Transaction> transactionHistory = new ArrayList<Transaction>();
+		private ArrayList<String> knownAccounts = new ArrayList<String>();
 		
 	public Account(int accountId, String userName, String password, double accountBalance) {
 		this.accountId = accountId;
@@ -42,19 +42,18 @@ class Account {
 	}
 
 	public ArrayList<Transaction> getTransactions() {
-		return this.transactions;
+		return transactionHistory;
 	}
 
-	public void setTransactions(Transaction transactions) {
-		this.transactions.add(transactions);
+	public void setTransactions(Transaction transaction) {
+		transactionHistory.add(transaction);
 	}
-
 	public ArrayList<String> getKnownAccounts() {
 		return this.knownAccounts;
 	}
 
-	public void setKnownAccounts(String knownAccounts) {
-		this.knownAccounts.add(knownAccounts);
+	public void setKnownAccounts(String knownAccount) {
+		this.knownAccounts.add(knownAccount);
 	}
 	
 	
