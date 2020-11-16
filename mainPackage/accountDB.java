@@ -16,7 +16,7 @@ public class accountDB {
 		Account createdUserAccount = new Account(getNextKey(), userName, password, 1000.00);
 		accounts.add(createdUserAccount);
 	}
-	
+
 	public ArrayList<Account> get() {
 		ArrayList<Account> allAccounts = new ArrayList<Account>();
 		for (Account i : accounts) {
@@ -24,4 +24,5 @@ public class accountDB {
 		}
 		return allAccounts;
 	}
+
 }

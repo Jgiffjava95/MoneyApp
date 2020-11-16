@@ -179,12 +179,13 @@ public class prompt {
 			System.out.println("Username: " + i);
 		}
 		return;
-		
+
 	}
 
 	private void transactionHistoryDisplay(Account user) {
 		for (Transaction i : user.getTransactions()) {
-			System.out.println("Sender: " + i.getSender() + " Reciever: " + i.getReciever() + " Ammount: $" + i.getAmmountTransfered());
+			System.out.println("Sender: " + i.getSender() + " Reciever: " + i.getReciever() + " Ammount: $"
+					+ i.getAmmountTransfered());
 		}
 		return;
 	}
@@ -215,9 +216,27 @@ public class prompt {
 
 	}
 
-	private void selectViaKnownAccounts(Account i) {
-		// TODO Auto-generated method stub
-
+	private void selectViaKnownAccounts(Account user) {
+		ArrayList<Account> Accounts = new ArrayList<Account>(db.get());
+		while (true) {
+			System.out.println("Please SELECT an OPTION by entering a coresponding NUMBER.");
+			for (String i : user.getKnownAccounts()) {
+				int index = 0;
+				System.out.println(index + ". " + i);
+				index += 1;
+			}
+			int selection = intListener();
+			if (selection > user.getKnownAccounts().size() - 1 || selection < user.getKnownAccounts().size() - 1) {
+				System.out.println("Please Enter a valid option.");
+			} else {
+				String knownUserName = user.getKnownAccounts().get(selection);
+				for (Account i : Accounts) {
+					if (knownUserName.equals(i.getUserName())) {
+						sendAmount(user, i);
+					}
+				}
+			}
+		}
 	}
 
 	private void searchUsername(Account user) {
@@ -242,18 +261,19 @@ public class prompt {
 			System.out.print("How much would you like to send?");
 			double transferAmount = intListener();
 			if (validateTransferAmount(transferAmount, user) == true) {
-				
+
 				user.setAccountBalance(user.getAccountBalance() - transferAmount);
 				reciever.setAccountBalance(reciever.getAccountBalance() + transferAmount);
-				
-				Transaction currentTransaction = new Transaction(user.getUserName(), reciever.getUserName(), transferAmount);
-				
+
+				Transaction currentTransaction = new Transaction(user.getUserName(), reciever.getUserName(),
+						transferAmount);
+
 				user.setTransactions(currentTransaction);
 				reciever.setTransactions(currentTransaction);
-				
+
 				user.setKnownAccounts(reciever.getUserName());
 				reciever.setKnownAccounts(user.getUserName());
-				
+
 				System.out.println(transferAmount + " has been sent to " + reciever.getUserName() + ".");
 
 				userMenu(user);
@@ -263,7 +283,7 @@ public class prompt {
 	}
 
 	private boolean validateTransferAmount(double transferAmount, Account user) {
-		if(transferAmount > user.getAccountBalance()) {
+		if (transferAmount > user.getAccountBalance()) {
 			return false;
 		}
 		return true;
