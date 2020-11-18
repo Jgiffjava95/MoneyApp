@@ -13,7 +13,7 @@ public class accountDB {
 	}
 
 	public void post(String userName, String password) {
-		Account createdUserAccount = new Account(getNextKey(), userName, password, 1000.00);
+		Account createdUserAccount = new Account(getNextKey(), userName, password, 1000);
 		accounts.add(createdUserAccount);
 	}
 

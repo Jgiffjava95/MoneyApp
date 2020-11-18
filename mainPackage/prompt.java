@@ -14,8 +14,13 @@ public class prompt {
 	}
 
 	private int intListener() {
-		int intListener = Integer.parseInt(listener.nextLine());
-		return intListener;
+		try {
+			int intListener = Integer.parseInt(listener.nextLine());
+			return intListener;
+		} catch (NumberFormatException e) {
+			System.out.println("That is not a number");
+		}
+		return 0;
 	}
 
 	private String stringListener() {
@@ -48,6 +53,7 @@ public class prompt {
 
 	private void createAccount() {
 		System.out.println("***Create Account***");
+		System.out.println("Enter 0 into Username or password field to back out.");
 		String userName = createUserName();
 		String password = createPassword();
 
@@ -58,6 +64,9 @@ public class prompt {
 		while (true) {
 			System.out.println("Create Username.");
 			String userName = stringListener();
+			if (userName.equals("0")) {
+				initialMenuSelections();
+			}
 			if (validateUserNameCreate(userName) == true) {
 				return userName;
 			}
@@ -70,8 +79,16 @@ public class prompt {
 			System.out.println("Create Password.");
 			String password = stringListener();
 
+			if (password.equals("0")) {
+				initialMenuSelections();
+			}
+
 			System.out.println("Enter Password Again.");
 			String passwordCheck = stringListener();
+
+			if (passwordCheck.equals("0")) {
+				initialMenuSelections();
+			}
 
 			if (validatePasswordCreate(password, passwordCheck) == true) {
 				return password;
@@ -122,10 +139,19 @@ public class prompt {
 			ArrayList<Account> Accounts = new ArrayList<Account>(db.get());
 
 			System.out.println("***Login***");
+			System.out.println("Enter 0 into Username or password field to back out.");
 			System.out.println("Enter Username.");
 			String userName = listener.nextLine();
+
+			if (userName.equals("0")) {
+				initialMenuSelections();
+			}
 			System.out.println("Enter Password.");
 			String password = listener.nextLine();
+
+			if (password.equals("0")) {
+				initialMenuSelections();
+			}
 
 			for (Account i : Accounts) {
 				if (userName.equals(i.getUserName())) {
@@ -136,7 +162,7 @@ public class prompt {
 				}
 			}
 			System.out.println("Invalid Username or Password.");
-			continue;
+			return;
 		}
 	}
 
@@ -175,6 +201,11 @@ public class prompt {
 	}
 
 	private void knownAccountsDisplay(Account user) {
+
+		if (user.getKnownAccounts().size() == 0) {
+			System.out.println("You have no known accounts.");
+		}
+
 		for (String i : user.getKnownAccounts()) {
 			System.out.println("Username: " + i);
 		}
@@ -183,6 +214,11 @@ public class prompt {
 	}
 
 	private void transactionHistoryDisplay(Account user) {
+
+		if (user.getTransactions().size() == 0) {
+			System.out.println("You have no previous transactions.");
+		}
+
 		for (Transaction i : user.getTransactions()) {
 			System.out.println("Sender: " + i.getSender() + " Reciever: " + i.getReciever() + " Ammount: $"
 					+ i.getAmmountTransfered());
@@ -218,15 +254,29 @@ public class prompt {
 
 	private void selectViaKnownAccounts(Account user) {
 		ArrayList<Account> Accounts = new ArrayList<Account>(db.get());
+
+		if (user.getKnownAccounts().size() == 0) {
+			System.out.println("You have no known accounts.");
+			return;
+		}
+
 		while (true) {
 			System.out.println("Please SELECT an OPTION by entering a coresponding NUMBER.");
+			System.out.println("0. Exit");
 			for (String i : user.getKnownAccounts()) {
-				int index = 0;
+				int index = 1;
 				System.out.println(index + ". " + i);
 				index += 1;
 			}
 			int selection = intListener();
-			if (selection > user.getKnownAccounts().size() - 1 || selection < user.getKnownAccounts().size() - 1) {
+
+			if (selection == 0) {
+				return;
+			} else if (selection > 0) {
+				selection -= 1;
+			}
+
+			if (selection > user.getKnownAccounts().size() - 1) {
 				System.out.println("Please Enter a valid option.");
 			} else {
 				String knownUserName = user.getKnownAccounts().get(selection);
@@ -259,7 +309,13 @@ public class prompt {
 	private void sendAmount(Account user, Account reciever) {
 		while (true) {
 			System.out.print("How much would you like to send?");
-			double transferAmount = intListener();
+			int transferAmount = intListener();
+			
+			if (transferAmount == 0) {
+				System.out.println("Cannot send $0.");
+				return;
+			}
+			
 			if (validateTransferAmount(transferAmount, user) == true) {
 
 				user.setAccountBalance(user.getAccountBalance() - transferAmount);

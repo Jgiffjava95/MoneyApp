@@ -7,11 +7,11 @@ class Account {
 	private int accountId;
 	private String userName;
 	private String password;
-	private double accountBalance;
+	private int accountBalance;
 	private ArrayList<Transaction> transactionHistory = new ArrayList<Transaction>();
 	private ArrayList<String> knownAccounts = new ArrayList<String>();
 
-	public Account(int accountId, String userName, String password, double accountBalance) {
+	public Account(int accountId, String userName, String password, int accountBalance) {
 		this.accountId = accountId;
 		this.userName = userName;
 		this.password = password;
@@ -34,11 +34,11 @@ class Account {
 		this.password = password;
 	}
 
-	public double getAccountBalance() {
+	public int getAccountBalance() {
 		return accountBalance;
 	}
 
-	public void setAccountBalance(double accountBalance) {
+	public void setAccountBalance(int accountBalance) {
 		this.accountBalance = accountBalance;
 	}
 
